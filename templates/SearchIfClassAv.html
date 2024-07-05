@@ -1,0 +1,167 @@
+{% extends 'indexx.html' %}
+{% block style %}
+<style>
+
+
+    .container {
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    .form-container {
+      
+        border: 2px solid linear-gradient(to right, #868185, #5a5659);
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+        box-shadow: 5px 5px 15px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .form-container h2 {
+        color: linear-gradient(to right, #868185, #5a5659);
+    }
+
+    .btn-container {
+        margin-bottom: 20px;
+    }
+
+    .btn-container button {
+        margin: 0 10px;
+    }
+
+    #scene {
+        background: #f0f0f0;
+        height: 200px;
+        text-align: center;
+        font-size: 24px;
+        line-height: 200px;
+    }
+</style>
+{% endblock style %}
+
+
+
+
+
+{% block main %}
+        <div style="background-color: white;" class="form-container" id="form1">
+            <h2>Search-By-Time-Room</h2>
+            <form method="POST" action="/search_clasav">
+                <div class="form-group">
+                    <input type="text" name="room_number" class="form-control" placeholder="Room Number">
+                </div>
+                <div class="form-group">
+                    <select class="form-control" name="day">
+                        <option value="Su">Sunday</option>
+                        <option value="M">Monday</option>
+                        <option value="W">Wednesday</option>
+                        <option value="Tu">Tuesday</option>
+                        <option value="Th">Thursday</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="time" class="form-control" name="start_time"  placeholder="Start Time">
+                </div>
+                <div class="form-group">
+                    <input type="time" class="form-control" name="end_time"  placeholder="End Time">
+                </div>
+                <button style="background: linear-gradient(to right, #868185, #5a5659); color:white;" class="btn ">Search</button>
+            </form>
+        </div>
+
+
+{% if  frees == 'free'%}
+<div  class="container">
+    <h1>Class Is Free</h1>
+</div>
+{% endif %}
+{% if conflicting_classes %}
+<h1 style="margin-top: 4%;">Result</h1>
+<div style="margin-top: 5%; margin-bottom: 4%;"  class="container">
+            <table style="background: linear-gradient(to right, #868185, #aca6ab); box-shadow: 5px 5px 15px 0 rgba(0, 0, 0, 1.4);"" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Course Code</th>
+                    <th>Details</th>
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in conflicting_classes %}
+                <tr>
+                    <td style=" text-align: center; vertical-align: middle;">{{ item[10] }} </td>
+                    <td>{{ item[9] }} - {% if 'Su' in item[5] %} Sunday {% elif 'M' in item[5] %} Monday {% elif  'W' in item[5] %} Wednesday {% elif 'Tu' in item[5]  %} Tuesday {% elif  'Th' in item[5] %} Thursday
+                    {% endif %}<br> {{ item[1] }} <br> ({{ item[6] }} - {{ item[7] }}) </td>
+
+
+                    <td style=" text-align: center; vertical-align: middle;">
+                        <button  class="btn btn-primary" data-toggle="modal" data-target="#detailsModal{{ loop.index }}">Details</button>
+                    </td>
+                </tr>
+                <div class="modal fade" id="detailsModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="detailsModalLabel">Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Section:</strong> {{ item[0] }}</p>
+                                <p><strong>Class Type:</strong> {{ item[3] }}</p>
+                                <p><strong>Class Ndr:</strong> {{ item[4] }}</p>
+                                <p><strong>Day:</strong>{% if 'Su' in item[5] %} Sunday {% elif 'M' in item[5] %} Monday {% elif  'W' in item[5] %} Wednesday {% elif 'Tu' in item[5]  %} Tuesday {% elif  'Th' in item[5] %} Thursday
+                                    {% endif %}</p>
+                                <p><strong>Hour Class:</strong> {{ item[8] }}</p>
+                                <p><strong>Status:</strong> {{ item[11] }}</p>
+                                <p><strong>College Name (Arabic):</strong> {{ item[12] }}</p>
+                                <p><strong>College Name (English):</strong> {{ item[13] }}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>    
+    </div>
+    <script>
+        // استدعاء الدالة عند تغيير قيمة الاختيار
+        function toggleSearchField() {
+            var searchType = document.getElementById('search_type');
+            var searchInput = document.getElementById('search_input');
+            var datalistInput = document.getElementById('datalist_input');
+            
+            // التحقق من قيمة الاختيار
+            if (searchType.value === 'Instructor') {
+                searchInput.style.display = 'none'; 
+                datalistInput.style.display = 'block'; // إظهار المدخل المرتبط بقائمة البيانات
+            } else {
+                searchInput.style.display = 'block'; // إظهار حقل البحث
+                datalistInput.style.display = 'none'; // إخفاء المدخل المرتبط بقائمة البيانات
+            }
+        }
+      
+        window.onload = toggleSearchField;
+    </script>
+
+
+
+
+    {% endif %}
+
+
+
+
+        
+        {% endblock main %}
+
+
+{% block jss %}
+
+{% endblock jss %}
+

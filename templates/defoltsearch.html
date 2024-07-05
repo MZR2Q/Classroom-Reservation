@@ -1,0 +1,178 @@
+{% extends 'indexx.html' %}
+    {% block main %}
+
+    
+    <form method="POST" action="/search" class="mt-4" style="border: 1px solid #5a5659; border-radius: 10px; padding: 20px; background-color:rgb(255, 255, 255);">
+        <h1 class="text-center" style="font-size: 24px; margin-top: 20px;">General-Search</h1>
+
+        <div class="form-group">
+            <label for="search_type" style="font-weight: bold;">Select Search Type</label>
+            <select class="form-control" id="search_type" name="search_type" onchange="toggleSearchField()" style="border: 2px solid #5a5659;">
+                <option value="Room">Room Number</option>
+                <option value="Instructor">Instructor</option>
+                <option value="ClassName">Course Name</option>
+            </select>
+        </div>
+    
+        <div class="form-group" id="search_input">
+            <label for="search_term" style="font-weight: bold;">Search Term</label>
+            <input type="text" class="form-control" id="search_term" name="search_term" style="border: 2px solid #5a5659;">
+        </div>
+    
+        <div class="form-group" id="datalist_input" style="display: none;">
+            <label for="select1" style="font-weight: bold;">College</label>
+            <select class="form-control" id="select1" onchange="updateSelectOptions()" style="border: 2px solid #5a5659;">
+                {% for s in collage %}
+                <option value="{{s[0]}}">{{s[0]}}</option>
+                {% endfor %}
+            </select>
+    
+            <label for="tname" style="font-weight: bold; margin-top: 10px;">Lecturer Name</label>
+            <input autocomplete="" type="text" name="tname" list="select2" style="border: 2px solid #5a5659;">
+            <datalist    id="select2" class="det1">
+                <option value="aa">
+            </datalist>
+        </div>
+    
+        <button style="background: linear-gradient(to right, #868185, #5a5659); color:white;" class="btn ">Search</button>
+    </form>
+    
+
+
+    
+        <script>
+            //('',), ('',), ('',), ('',), ('',), ('',), ('',), ('',), ('',), ('',)]
+            const ComputerScienceEngineering = '{% set included_values = [] %} {% for s in data %} {% if s[13] == "Computer Science & Engineering" and s[10] not in included_values %} <option value="{{ s[10] }}"> {% set _ = included_values.append(s[10]) %} {% endif %} {% endfor %}';
+            const BusinessAdministration = '{% set included_values = [] %} {% for s in data %} {% if s[13] == "Business Administration" and s[10] not in included_values %} <option value="{{ s[10] }}"> {% set _ = included_values.append(s[10]) %} {% endif %} {% endfor %}';
+            const UniversityCollegeKhafji = '{% set included_values = [] %} {% for s in data %} {% if s[13] == "University College, Khafji" and s[10] not in included_values %} <option value="{{ s[10] }}"> {% set _ = included_values.append(s[10]) %} {% endif %} {% endfor %}';
+            const UniversityCollegeAlolaya = '{% set included_values = [] %} {% for s in data %} {% if s[13] == "University College, Alolaya" and s[10] not in included_values %} <option value="{{ s[10] }}"> {% set _ = included_values.append(s[10]) %} {% endif %} {% endfor %}';
+            const UniversityCollegeNuayriah = '{% set included_values = [] %} {% for s in data %} {% if s[13] == "University College, Nuayriah" and s[10] not in included_values %} <option value="{{ s[10] }}"> {% set _ = included_values.append(s[10]) %} {% endif %} {% endfor %}';
+            const CollegeofEducation = '{% set included_values = [] %} {% for s in data %} {% if s[13] == "College of Education" and s[10] not in included_values %} <option value="{{ s[10] }}"> {% set _ = included_values.append(s[10]) %} {% endif %} {% endfor %}';
+            const CollegeofArts = '{% set included_values = [] %} {% for s in data %} {% if s[13] == "College of Arts" and s[10] not in included_values %} <option value="{{ s[10] }}"> {% set _ = included_values.append(s[10]) %} {% endif %} {% endfor %}';
+            const CollegeofScience = '{% set included_values = [] %} {% for s in data %} {% if s[13] == "College of Science" and s[10] not in included_values %} <option value="{{ s[10] }}"> {% set _ = included_values.append(s[10]) %} {% endif %} {% endfor %}';
+            const AppliedMedicalScience = '{% set included_values = [] %} {% for s in data %} {% if s[13] == "Applied Medical Science" and s[10] not in included_values %} <option value="{{ s[10] }}"> {% set _ = included_values.append(s[10]) %} {% endif %} {% endfor %}';
+            const CollegeofEngineering = '{% set included_values = [] %} {% for s in data %} {% if s[13] == "College of Engineering" and s[10] not in included_values %} <option value="{{ s[10] }}"> {% set _ = included_values.append(s[10]) %} {% endif %} {% endfor %}';
+            const CollegeOfPharmacy = '{% set included_values = [] %} {% for s in data %} {% if s[13] == "College Of Pharmacy" and s[10] not in included_values %} <option value="{{ s[10] }}"> {% set _ = included_values.append(s[10]) %} {% endif %} {% endfor %}';
+            const CommunityCollege = '{% set included_values = [] %} {% for s in data %} {% if s[13] == "Community College" and s[10] not in included_values %} <option value="{{ s[10] }}"> {% set _ = included_values.append(s[10]) %} {% endif %} {% endfor %}';
+            const CommonFirstYear = '{% set included_values = [] %} {% for s in data %} {% if s[13] == "Common First Year" and s[10] not in included_values %} <option value="{{ s[10] }}"> {% set _ = included_values.append(s[10]) %} {% endif %} {% endfor %}';
+
+            function updateSelectOptions() {
+                const select1 = document.getElementById("select1");
+                const select2 = document.getElementById("select2");
+                const selectedValue = select1.value;
+        
+                select2.innerHTML = ""; // Clear the options
+        
+                let options;
+        
+                if (selectedValue === "Computer Science & Engineering") {
+                    options = ComputerScienceEngineering;
+                } else if (selectedValue === "Business Administration") {
+                    options = BusinessAdministration;
+                } else if (selectedValue === "University College, Khafji") {
+                    options = UniversityCollegeKhafji;
+                } else if (selectedValue === "University College, Alolaya") {
+                    options = UniversityCollegeAlolaya;
+                } else if (selectedValue === "University College, Nuayriah") {
+                    options = UniversityCollegeNuayriah;
+                } else if (selectedValue === "Common First Year") {
+                    options = CommonFirstYear;
+                } else if (selectedValue === "College of Education") {
+                    options = CollegeofEducation;
+                } else if (selectedValue === "College of Arts") {
+                    options = CollegeofArts;
+                } else if (selectedValue === "College of Science") {
+                    options = CollegeofScience;
+                } else if (selectedValue === "Applied Medical Science") {
+                    options = AppliedMedicalScience;
+                } else if (selectedValue === "College of Engineering") {
+                    options = CollegeofEngineering;
+                } else if (selectedValue === "College Of Pharmacy") {
+                    options = CollegeOfPharmacy;
+                } else if (selectedValue === "Community College") {
+                    options = CommunityCollege;
+                } 
+
+                select2.innerHTML = options;
+            }
+        
+            // Initialize select2 based on the default value of select1
+            updateSelectOptions();
+        </script>
+        <h1 style="margin-top: 4%;">Result</h1>
+        <div style="margin-top: 5%; margin-bottom: 4%;"  class="container">
+            <table style="background: linear-gradient(to right, #868185, #aca6ab); box-shadow: 5px 5px 15px 0 rgba(0, 0, 0, 1.4);" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Course Code</th>
+                    <th>Details</th>
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in search_result %}
+                <tr>
+                    <td style=" text-align: center; vertical-align: middle;">{{ item[10] }} </td>
+                    <td  style=" text-align: center; vertical-align: middle;">{{ item[9] }} - {% if 'Su' in item[5] %} Sunday {% elif 'M' in item[5] %} Monday {% elif  'W' in item[5] %} Wednesday {% elif 'Tu' in item[5]  %} Tuesday {% elif  'Th' in item[5] %} Thursday
+                    {% endif %}<br> {{ item[1] }} <br> ({{ item[6] }} - {{ item[7] }}) </td>
+
+
+                    <td style=" text-align: center; vertical-align: middle;">
+                        <button  class="btn btn-primary" data-toggle="modal" style="background-color: #5a5659; border: none;" data-target="#detailsModal{{ loop.index }}">Details</button>
+                    </td>
+                </tr>
+                <div class="modal fade" id="detailsModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="detailsModalLabel">Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Section:</strong> {{ item[0] }}</p>
+                                <p><strong>Class Type:</strong> {{ item[3] }}</p>
+                                <p><strong>Class Ndr:</strong> {{ item[4] }}</p>
+                                <p><strong>Day:</strong>{% if 'Su' in item[5] %} Sunday {% elif 'M' in item[5] %} Monday {% elif  'W' in item[5] %} Wednesday {% elif 'Tu' in item[5]  %} Tuesday {% elif  'Th' in item[5] %} Thursday
+                                    {% endif %}</p>
+                                <p><strong>Hour Class:</strong> {{ item[8] }}</p>
+                                <p><strong>Status:</strong> {{ item[11] }}</p>
+                                <p><strong>College Name (Arabic):</strong> {{ item[12] }}</p>
+                                <p><strong>College Name (English):</strong> {{ item[13] }}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>    
+
+    <script>
+        // استدعاء الدالة عند تغيير قيمة الاختيار
+        function toggleSearchField() {
+            var searchType = document.getElementById('search_type');
+            var searchInput = document.getElementById('search_input');
+            var datalistInput = document.getElementById('datalist_input');
+            
+            // التحقق من قيمة الاختيار
+            if (searchType.value === 'Instructor') {
+                searchInput.style.display = 'none'; 
+                datalistInput.style.display = 'block'; // إظهار المدخل المرتبط بقائمة البيانات
+            } else {
+                searchInput.style.display = 'block'; // إظهار حقل البحث
+                datalistInput.style.display = 'none'; // إخفاء المدخل المرتبط بقائمة البيانات
+            }
+        }
+      
+        // استدعاء الدالة عند تحميل الصفحة لتعيين الحالة الأولية لعناصر النموذج
+        window.onload = toggleSearchField;
+    </script>
+    {% endblock main %}
+    
+
+
